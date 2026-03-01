@@ -1,17 +1,27 @@
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+import streamlit as st
+from model import calculate_similarity
 
-# Load pretrained model (downloads first time only)
-model = SentenceTransformer('all-MiniLM-L6-v2')
+st.set_page_config(page_title="AI Resume Screener", page_icon="🤖")
 
-def calculate_similarity(job_desc, resume_text):
-    # Convert texts into embeddings (numbers)
-    embeddings = model.encode([job_desc, resume_text])
-    
-    # Compare similarity
-    similarity = cosine_similarity(
-        [embeddings[0]], 
-        [embeddings[1]]
-    )
-    
-    return round(float(similarity[0][0]) * 100, 2)
+st.title("🤖 AI Resume Screening System")
+st.markdown("Compare Resume with Job Description using AI")
+
+job_desc = st.text_area("📄 Job Description", height=200)
+resume = st.text_area("📄 Resume Text", height=200)
+
+if st.button("🔍 Check Match"):
+    if job_desc.strip() != "" and resume.strip() != "":
+        score = calculate_similarity(job_desc, resume)
+
+        st.subheader("Result:")
+        st.success(f"Similarity Score: {score}%")
+
+        if score > 75:
+            st.write("✅ Strong Match")
+        elif score > 50:
+            st.write("⚡ Moderate Match")
+        else:
+            st.write("❌ Low Match")
+
+    else:
+        st.warning("Please fill both fields before checking.")

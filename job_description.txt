@@ -1,0 +1,8 @@
+Looking for Python Developer with skills in:
+Python
+Machine Learning
+Data Analysis
+Pandas
+Numpy
+SQL
+Flask
